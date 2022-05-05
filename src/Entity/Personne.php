@@ -19,6 +19,12 @@ class Personne
     #[ORM\Column(type: 'smallint')]
     private $age;
 
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $job;
+
+    #[ORM\Column(type: 'string', length: 50)]
+    private $name;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +50,30 @@ class Personne
     public function setAge(int $age): self
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    public function getJob(): ?string
+    {
+        return $this->job;
+    }
+
+    public function setJob(?string $job): self
+    {
+        $this->job = $job;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }
