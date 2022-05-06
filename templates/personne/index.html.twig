@@ -16,18 +16,24 @@ Liste des personne
             <h6 class="card-subtitle mb-2 text-muted">{{personne.firstname}} {{personne.name}}</h6>
             <p class="card-text">Age: {{personne.age}}</p>
             <a href="{{path('personne.id',{id: personne.id})}}" class="card-link">Details</a>
+            <a href="{{path('personne.delete',{id: personne.id})}}" class="card-link">Delete</a>
         </div>
     </div>
     {% endfor %}
-    {% if isPaginated %}
+    {% if isPaginated is defined and isPaginated %}
         <div class="row mt-5">
             <nav aria-label="Page navigation example">
                 <ul class="pagination">
-                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    {% if page != 1 %}
+                    <li class="page-item"><a class="page-link" href="{{path('personne.index.all.p',{page : page-1,nbre : nbre} ) }}">Previous</a></li>
+                    {% endif %}
+                    {% for i in range (1, nbrePage) %}
+                    <li class="page-item"><a class="page-link" href="{{path('personne.index.all.p',{page : i,nbre : nbre} ) }}">{{i}}</a>
+                    </li>
+                    {% endfor %}
+                    {% if page != nbrePage %}
+                    <li class="page-item"><a class="page-link" href="{{path('personne.index.all.p',{page : page+1,nbre : nbre} ) }}">Next</a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>

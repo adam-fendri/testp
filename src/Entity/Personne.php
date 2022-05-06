@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PersonneRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PersonneRepository::class)]
@@ -19,11 +21,24 @@ class Personne
     #[ORM\Column(type: 'smallint')]
     private $age;
 
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $job;
+
 
     #[ORM\Column(type: 'string', length: 50)]
     private $name;
+
+    #[ORM\OneToOne(targetEntity: Profile::class, cascade: ['persist', 'remove'])]
+    private $relation;
+
+    #[ORM\ManyToMany(targetEntity: Hobby::class)]
+    private $hobbies;
+
+    #[ORM\ManyToOne(targetEntity: Job::class, inversedBy: 'personnes')]
+    private $job;
+
+    public function __construct()
+    {
+        $this->hobbies = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -54,17 +69,7 @@ class Personne
         return $this;
     }
 
-    public function getJob(): ?string
-    {
-        return $this->job;
-    }
 
-    public function setJob(?string $job): self
-    {
-        $this->job = $job;
-
-        return $this;
-    }
 
     public function getName(): ?string
     {
@@ -74,6 +79,54 @@ class Personne
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getRelation(): ?Profile
+    {
+        return $this->relation;
+    }
+
+    public function setRelation(?Profile $relation): self
+    {
+        $this->relation = $relation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hobby>
+     */
+    public function getHobbies(): Collection
+    {
+        return $this->hobbies;
+    }
+
+    public function addHobby(Hobby $hobby): self
+    {
+        if (!$this->hobbies->contains($hobby)) {
+            $this->hobbies[] = $hobby;
+        }
+
+        return $this;
+    }
+
+    public function removeHobby(Hobby $hobby): self
+    {
+        $this->hobbies->removeElement($hobby);
+
+        return $this;
+    }
+
+    public function getJob(): ?Job
+    {
+        return $this->job;
+    }
+
+    public function setJob(?Job $job): self
+    {
+        $this->job = $job;
 
         return $this;
     }

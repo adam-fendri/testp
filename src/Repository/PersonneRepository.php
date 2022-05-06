@@ -6,6 +6,7 @@ use App\Entity\Personne;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -71,4 +72,31 @@ class PersonneRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    private function addIntervaleAge(QueryBuilder $qb, $ageMin, $ageMax)
+    {
+        $qb->andWhere('p.age >= :ageMin and p.age <= :ageMax')
+        ->setParameters(['ageMax'=>$ageMax,'ageMin'=>$ageMin]);
+    }
+
+    public function findPersonneByAgeInterval($ageMin,$ageMax)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.age >= :ageMin and p.age <= :ageMax')
+           // ->setParameter('val', $value)
+            ->setParameters(['ageMax'=>$ageMax,'ageMin'=>$ageMin])
+            ->getQuery()
+            ->getResult();
+
+    }
+
+    public function statsPersonneByAgeInterval($ageMin,$ageMax)
+    {
+        $qb= $this->createQueryBuilder('p')
+            ->select('avg(p.age) as ageMoyen , count(p.id) as nbrePersonne');
+            $this->addIntervaleAge($qb, $ageMin, $ageMax);
+            return $qb->getQuery()->getScalarResult();
+
+    }
+
 }

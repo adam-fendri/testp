@@ -14,7 +14,7 @@ class PersonneFixture extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
-        for($i=0;$i<30;$i++){
+        for($i=0;$i<50;$i++){
             $personne= new Personne();
             $personne->setFirstname($faker->firstName);
             $personne->setName($faker->name);
